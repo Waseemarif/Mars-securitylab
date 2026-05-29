@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Enterprise Vendor Intake</title>
+    <style>
+        body { font-family: sans-serif; background: #f1f5f9; padding: 50px; }
+        .box { background: white; padding: 30px; max-width: 500px; margin: auto; border-radius: 8px; border-top: 5px solid #0f766e; }
+        label { display: block; margin: 15px 0 5px; font-weight: bold; }
+        input, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { background: #0f766e; color: white; width: 100%; padding: 12px; border: none; margin-top: 20px; cursor: pointer; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>Vendor Processing Form</h2>
+        <form action="https://httpbin.org/post" method="POST">
+            <label>Invoice Number</label>
+            <input type="text" name="invoice_id" placeholder="INV-2026-001">
+            <label>Total Amount</label>
+            <input type="text" name="amount" placeholder="$1,623.75">
+            <label>Internal Processing Notes (Paste ALL Invoice Details)</label>
+            <textarea name="notes" rows="6" placeholder="Paste full billing and payment info here..."></textarea>
+            <button type="submit">Submit to Ledger</button>
+        </form>
+    </div>
+</body>
+</html>
