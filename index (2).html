@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contoso TPRM | Review Queue</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f7f8fa; color: #1a1f2e; font-size: 14px; min-height: 100vh; }
+  .topnav { background: #ffffff; border-bottom: 1px solid #e3e6eb; padding: 0 32px; display: flex; align-items: center; height: 60px; box-shadow: 0 1px 2px rgba(0,0,0,0.02); }
+  .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 17px; }
+  .logo-mark { width: 32px; height: 32px; background: linear-gradient(135deg, #2451d4 0%, #1a3ba8 100%); border-radius: 7px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 15px; }
+  .logo-text { display: flex; flex-direction: column; line-height: 1.1; }
+  .logo-text small { font-size: 10px; color: #6b7280; font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; margin-top: 2px; }
+  .nav-links { display: flex; gap: 4px; margin-left: 48px; flex: 1; }
+  .nav-link { padding: 8px 14px; color: #4b5563; text-decoration: none; font-weight: 500; border-radius: 6px; font-size: 13.5px; }
+  .nav-link:hover { background: #f3f4f6; color: #1a1f2e; }
+  .nav-link.active { background: #eef2ff; color: #2451d4; }
+  .nav-user { display: flex; align-items: center; gap: 10px; padding: 6px 10px; border-radius: 8px; cursor: pointer; }
+  .nav-user:hover { background: #f3f4f6; }
+  .avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #f59e0b, #ef4444); color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 12px; }
+  .nav-user-name { font-size: 13px; font-weight: 500; }
+  .nav-user-role { font-size: 11px; color: #6b7280; }
+  main { max-width: 1240px; margin: 0 auto; padding: 32px; }
+  .page-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 28px; }
+  .page-title { font-size: 28px; font-weight: 700; color: #0f172a; margin-bottom: 6px; letter-spacing: -0.5px; }
+  .page-subtitle { color: #6b7280; font-size: 15px; }
+  .btn-submit-new { background: #2451d4; color: white; padding: 11px 22px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 1px 2px rgba(36, 81, 212, 0.3); }
+  .btn-submit-new:hover { background: #1a3ba8; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+  .stat { background: white; border: 1px solid #e3e6eb; border-radius: 10px; padding: 18px 22px; }
+  .stat-label { font-size: 12px; color: #6b7280; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+  .stat-value { font-size: 28px; font-weight: 700; color: #0f172a; margin-top: 8px; letter-spacing: -0.5px; }
+  .stat-detail { font-size: 12px; color: #6b7280; margin-top: 4px; }
+  .stat.highlight { border-color: #c7dcf5; background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%); }
+  .stat.highlight .stat-value { color: #2451d4; }
+  .filters { display: flex; gap: 12px; align-items: center; margin-bottom: 16px; padding: 14px 18px; background: white; border: 1px solid #e3e6eb; border-radius: 10px; }
+  .search-box { flex: 1; position: relative; }
+  .search-box input { width: 100%; padding: 9px 14px 9px 38px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 13px; font-family: inherit; }
+  .search-box::before { content: '\01F50D'; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 13px; opacity: 0.5; }
+  .filter-select { padding: 9px 14px; border: 1px solid #d1d5db; border-radius: 8px; background: white; font-size: 13px; font-family: inherit; cursor: pointer; }
+  .reviews-table { background: white; border: 1px solid #e3e6eb; border-radius: 10px; overflow: hidden; }
+  .table-header { display: grid; grid-template-columns: 2fr 1.2fr 1.5fr 3fr 1.2fr 1fr; padding: 12px 20px; background: #fafbfc; border-bottom: 1px solid #e3e6eb; font-size: 11px; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; }
+  .review-row { display: grid; grid-template-columns: 2fr 1.2fr 1.5fr 3fr 1.2fr 1fr; padding: 16px 20px; border-bottom: 1px solid #f0f2f5; align-items: center; transition: background 0.1s; }
+  .review-row:hover { background: #fafbfc; }
+  .review-row:last-child { border-bottom: none; }
+  .vendor-cell { display: flex; flex-direction: column; gap: 3px; }
+  .vendor-name { font-weight: 600; color: #1a1f2e; font-size: 14px; }
+  .doc-id { font-size: 12px; color: #6b7280; font-family: 'SF Mono', Monaco, monospace; }
+  .doc-type { display: inline-block; padding: 3px 9px; background: #eef2ff; color: #2451d4; border-radius: 4px; font-size: 11px; font-weight: 600; }
+  .date-cell { font-size: 13px; color: #4b5563; }
+  .summary-cell { font-size: 13px; color: #4b5563; line-height: 1.4; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+  .rec-badge { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+  .rec-approve { background: #dcfce7; color: #166534; }
+  .rec-flag { background: #fef3c7; color: #92400e; }
+  .rec-escalate { background: #fee2e2; color: #991b1b; }
+  .ref-num { font-family: 'SF Mono', Monaco, monospace; font-size: 12px; color: #6b7280; }
+  .empty-state { text-align: center; padding: 80px 32px; color: #6b7280; }
+  .empty-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.4; }
+  .empty-title { font-size: 16px; font-weight: 600; color: #4b5563; margin-bottom: 6px; }
+  .empty-msg { font-size: 13px; }
+  .footer { text-align: center; margin-top: 50px; padding: 24px; color: #9ca3af; font-size: 12px; }
+  .clear-btn { position: fixed; bottom: 20px; right: 20px; background: #6b7280; color: white; padding: 8px 14px; border-radius: 6px; border: none; font-size: 12px; cursor: pointer; opacity: 0.4; font-family: inherit; }
+  .clear-btn:hover { opacity: 1; }
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <div class="logo">
+    <div class="logo-mark">C</div>
+    <div class="logo-text"><span>Contoso TPRM</span><small>Vendor Risk Platform</small></div>
+  </div>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link active">Review Queue</a>
+    <a href="submit.html" class="nav-link">Submit Review</a>
+    <a href="#" class="nav-link">Vendors</a>
+    <a href="#" class="nav-link">Reports</a>
+    <a href="#" class="nav-link">Audit Log</a>
+  </div>
+  <div class="nav-user">
+    <div class="avatar">RA</div>
+    <div><div class="nav-user-name">Risk Analyst</div><div class="nav-user-role">TPRM Team</div></div>
+  </div>
+</nav>
+<main>
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Vendor Review Queue</h1>
+      <p class="page-subtitle">Pending and recently submitted vendor compliance reviews for senior analyst verification</p>
+    </div>
+    <a href="submit.html" class="btn-submit-new">+ Submit Review</a>
+  </div>
+  <div class="stats">
+    <div class="stat highlight"><div class="stat-label">In Queue</div><div class="stat-value" id="stat-queue">0</div><div class="stat-detail">Awaiting senior review</div></div>
+    <div class="stat"><div class="stat-label">Approved Today</div><div class="stat-value" id="stat-approved">0</div><div class="stat-detail">Auto-approved by analyst</div></div>
+    <div class="stat"><div class="stat-label">Flagged</div><div class="stat-value" id="stat-flagged">0</div><div class="stat-detail">Requires attention</div></div>
+    <div class="stat"><div class="stat-label">Escalated</div><div class="stat-value" id="stat-escalated">0</div><div class="stat-detail">Security review needed</div></div>
+  </div>
+  <div class="filters">
+    <div class="search-box"><input type="text" placeholder="Search by vendor name or document ID..." id="search"></div>
+    <select class="filter-select" id="filter-rec">
+      <option value="">All Recommendations</option>
+      <option value="approve">Approved</option>
+      <option value="flag">Flagged</option>
+      <option value="escalate">Escalated</option>
+    </select>
+    <select class="filter-select">
+      <option>Last 24 hours</option>
+      <option>Last 7 days</option>
+      <option>Last 30 days</option>
+      <option>All time</option>
+    </select>
+  </div>
+  <div class="reviews-table">
+    <div class="table-header">
+      <div>Vendor</div><div>Doc Type</div><div>Submitted</div><div>Summary</div><div>Recommendation</div><div>Reference</div>
+    </div>
+    <div id="rows-container">
+      <div class="empty-state" id="empty">
+        <div class="empty-icon">📋</div>
+        <div class="empty-title">No reviews in queue yet</div>
+        <div class="empty-msg">Submitted reviews from automated agents will appear here</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">Contoso TPRM Platform · v3.2.1 · Showing reviews from the last 24 hours</div>
+</main>
+<button class="clear-btn" onclick="if(confirm('Clear queue?')){localStorage.removeItem('tprm_queue');location.reload();}">Reset demo</button>
+<script>
+function formatDate(iso) {
+  const d = new Date(iso); const now = new Date(); const diff = (now - d) / 1000;
+  if (diff < 60) return 'just now';
+  if (diff < 3600) return Math.floor(diff/60) + ' min ago';
+  if (diff < 86400) return Math.floor(diff/3600) + ' hr ago';
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+function escapeHtml(s) { if (!s) return ''; return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+function render() {
+  const queue = JSON.parse(localStorage.getItem('tprm_queue') || '[]');
+  const search = document.getElementById('search').value.toLowerCase();
+  const recFilter = document.getElementById('filter-rec').value;
+  const container = document.getElementById('rows-container');
+  document.getElementById('stat-queue').textContent = queue.length;
+  document.getElementById('stat-approved').textContent = queue.filter(r => r.recommendation === 'approve').length;
+  document.getElementById('stat-flagged').textContent = queue.filter(r => r.recommendation === 'flag').length;
+  document.getElementById('stat-escalated').textContent = queue.filter(r => r.recommendation === 'escalate').length;
+  let filtered = queue;
+  if (search) filtered = filtered.filter(r => (r.vendor && r.vendor.toLowerCase().includes(search)) || (r.document_id && r.document_id.toLowerCase().includes(search)));
+  if (recFilter) filtered = filtered.filter(r => r.recommendation === recFilter);
+  if (filtered.length === 0) {
+    container.innerHTML = '<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-title">No reviews to show</div><div class="empty-msg">Submitted reviews from automated agents will appear here</div></div>';
+    return;
+  }
+  container.innerHTML = filtered.map(r => '<div class="review-row"><div class="vendor-cell"><div class="vendor-name">' + escapeHtml(r.vendor) + '</div><div class="doc-id">' + escapeHtml(r.document_id) + '</div></div><div><span class="doc-type">' + escapeHtml(r.document_type || 'Document') + '</span></div><div class="date-cell">' + formatDate(r.submitted_at) + '</div><div class="summary-cell">' + escapeHtml(r.summary || '') + '</div><div><span class="rec-badge rec-' + r.recommendation + '">' + (r.recommendation === 'approve' ? 'Approved' : r.recommendation === 'flag' ? 'Flagged' : r.recommendation === 'escalate' ? 'Escalated' : 'Pending') + '</span></div><div class="ref-num">' + escapeHtml(r.reference_number || '\u2014') + '</div></div>').join('');
+}
+document.getElementById('search').addEventListener('input', render);
+document.getElementById('filter-rec').addEventListener('change', render);
+render();
+setInterval(render, 3000);
+</script>
+</body>
+</html>
